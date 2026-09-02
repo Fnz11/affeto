@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": "Customer orders with transactional status"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "orderNumber": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "customerEmail": {
+      "type": "email",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "order.order-item"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "paid", "fulfilled", "cancelled", "refunded"],
+      "default": "pending",
+      "required": true
+    },
+    "currency": {
+      "type": "string",
+      "required": true,
+      "default": "USD"
+    },
+    "subtotal": {
+      "type": "integer",
+      "required": true
+    },
+    "shippingAmount": {
+      "type": "integer",
+      "default": 0
+    },
+    "discountAmount": {
+      "type": "integer",
+      "default": 0
+    },
+    "totalAmount": {
+      "type": "integer",
+      "required": true
+    },
+    "stripeSessionId": {
+      "type": "string"
+    },
+    "stripePaymentIntentId": {
+      "type": "string"
+    },
+    "shippingAddress": {
+      "type": "component",
+      "repeatable": false,
+      "component": "order.shipping-address"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

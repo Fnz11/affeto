@@ -1,0 +1,42 @@
+---
+import { Header } from '@/components/common/Header';
+import { CartDrawer } from '@/components/cart/CartDrawer';
+import { ReactQueryProvider } from '@/lib/queryClient';
+import Footer from '@/components/common/Footer.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Affeto — Timeless Minimalist Apparel & Goods',
+  description = 'High-performance e-commerce storefront for ethical, enduring wardrobe essentials.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Preconnect Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="min-h-screen flex flex-col antialiased">
+    <ReactQueryProvider client:load>
+      <Header client:load />
+      <CartDrawer client:load />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </ReactQueryProvider>
+  </body>
+</html>

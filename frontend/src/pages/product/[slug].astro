@@ -1,0 +1,39 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getProductBySlug, getProducts } from '@/lib/api';
+import { ProductDetails } from '@/components/catalog/ProductDetails';
+import { ProductCard } from '@/components/catalog/ProductCard';
+
+const { slug } = Astro.params;
+const product = await getProductBySlug(slug as string);
+
+if (!product) {
+  return Astro.redirect('/catalog');
+}
+
+const allProducts = await getProducts();
+const relatedProducts = allProducts.filter((p) => p.id !== product.id).slice(0, 4);
+---
+
+<Layout
+  title={`${product.name} — Affeto`}
+  description={product.description || product.seoDescription}
+>
+  <ProductDetails client:load product={product} />
+
+  <!-- Related Products -->
+  {relatedProducts.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-border mt-12">
+      <div class="space-y-1 mb-8">
+        <span class="text-xs uppercase tracking-widest font-semibold text-muted-foreground">Complete the Look</span>
+        <h2 class="font-editorial text-2xl sm:text-3xl font-bold">Complementary Pieces</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {relatedProducts.map((p) => (
+          <ProductCard client:visible product={p} />
+        ))}
+      </div>
+    </section>
+  )}
+</Layout>

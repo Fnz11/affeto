@@ -1,0 +1,58 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-card border-t border-border mt-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+      <!-- Brand statement -->
+      <div class="space-y-4 md:col-span-1">
+        <span class="font-editorial text-2xl font-bold tracking-widest text-foreground uppercase">
+          AFFETO
+        </span>
+        <p class="text-xs text-muted-foreground leading-relaxed">
+          Crafting timeless, minimalist garments and everyday goods from responsibly sourced natural fibers. Engineered for longevity and effortless living.
+        </p>
+        <p class="text-[11px] text-muted-foreground">
+          © {currentYear} Affeto Studios. All rights reserved.
+        </p>
+      </div>
+
+      <!-- Categories -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Catalog</h4>
+        <ul class="space-y-2 text-xs text-muted-foreground">
+          <li><a href="/catalog" class="hover:text-foreground transition-colors">Shop All</a></li>
+          <li><a href="/category/tops" class="hover:text-foreground transition-colors">Linen & Knits</a></li>
+          <li><a href="/category/bottoms" class="hover:text-foreground transition-colors">Selvedge Denim</a></li>
+          <li><a href="/category/outerwear" class="hover:text-foreground transition-colors">Trench Coats</a></li>
+          <li><a href="/category/footwear" class="hover:text-foreground transition-colors">Tuscan Leather</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Care -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Customer Service</h4>
+        <ul class="space-y-2 text-xs text-muted-foreground">
+          <li><a href="/account/orders" class="hover:text-foreground transition-colors">Track Order</a></li>
+          <li><a href="/account/wishlist" class="hover:text-foreground transition-colors">Wishlist</a></li>
+          <li><a href="/account" class="hover:text-foreground transition-colors">Account Dashboard</a></li>
+          <li><span class="text-muted-foreground/70">Shipping & Returns</span></li>
+          <li><span class="text-muted-foreground/70">Size Guide</span></li>
+        </ul>
+      </div>
+
+      <!-- Sustainability / Certifications -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Sustainability</h4>
+        <p class="text-xs text-muted-foreground leading-relaxed">
+          100% plastic-free compostable packaging. 1% for the Planet partner. Carbon-neutral fulfillment via certified partners.
+        </p>
+        <div class="flex items-center gap-2 pt-2 text-[11px] text-muted-foreground font-medium">
+          <span class="px-2 py-0.5 border border-border rounded">GOTS Certified</span>
+          <span class="px-2 py-0.5 border border-border rounded">OEKO-TEX</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

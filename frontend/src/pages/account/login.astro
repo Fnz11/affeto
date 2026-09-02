@@ -1,0 +1,10 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { LoginForm } from '@/components/account/AuthForms';
+---
+
+<Layout title="Sign In — Affeto">
+  <div class="py-16 px-4">
+    <LoginForm client:load />
+  </div>
+</Layout>

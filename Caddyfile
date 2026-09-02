@@ -1,0 +1,22 @@
+{
+    # Global options
+    auto_https off
+}
+
+http://localhost {
+    # Strapi backend API & Admin
+    handle /api/* {
+        reverse_proxy strapi:1337
+    }
+    handle /admin* {
+        reverse_proxy strapi:1337
+    }
+    handle /uploads/* {
+        reverse_proxy strapi:1337
+    }
+
+    # Frontend Astro SSR Storefront
+    handle {
+        reverse_proxy frontend:4321
+    }
+}

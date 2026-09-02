@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "discount_codes",
+  "info": {
+    "singularName": "discount-code",
+    "pluralName": "discount-codes",
+    "displayName": "DiscountCode",
+    "description": "Promotional discount codes"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "code": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "discountType": {
+      "type": "enumeration",
+      "enum": ["percent", "flat"],
+      "default": "percent",
+      "required": true
+    },
+    "value": {
+      "type": "integer",
+      "required": true,
+      "description": "Percent (e.g. 15 for 15%) or flat cents"
+    },
+    "minOrderAmount": {
+      "type": "integer",
+      "default": 0
+    },
+    "maxUses": {
+      "type": "integer"
+    },
+    "currentUses": {
+      "type": "integer",
+      "default": 0
+    },
+    "expiresAt": {
+      "type": "datetime"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

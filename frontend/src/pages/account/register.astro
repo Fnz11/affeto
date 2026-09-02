@@ -1,0 +1,10 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { RegisterForm } from '@/components/account/AuthForms';
+---
+
+<Layout title="Register — Affeto">
+  <div class="py-16 px-4">
+    <RegisterForm client:load />
+  </div>
+</Layout>

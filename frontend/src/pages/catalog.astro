@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getProducts, getCategories } from '@/lib/api';
+import { CatalogExplorer } from '@/components/catalog/CatalogExplorer';
+
+const products = await getProducts();
+const categories = await getCategories();
+
+const search = Astro.url.searchParams.get('search') || '';
+const category = Astro.url.searchParams.get('category') || '';
+---
+
+<Layout title="Catalog — Affeto Essentials">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="space-y-2 mb-4">
+      <span class="text-xs uppercase tracking-widest font-semibold text-muted-foreground">The Roster</span>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
+        Complete Collection
+      </h1>
+      <p class="text-xs sm:text-sm text-muted-foreground max-w-xl">
+        Explore our comprehensive lineup of minimalist shirts, raw selvedge denim, weatherproof outerwear, and artisan leather footwear.
+      </p>
+    </div>
+
+    <CatalogExplorer
+      client:load
+      initialProducts={products}
+      categories={categories}
+      initialCategory={category}
+      initialSearch={search}
+    />
+  </div>
+</Layout>

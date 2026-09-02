@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_order_shipping_addresses",
+  "info": {
+    "displayName": "ShippingAddress",
+    "icon": "pinMap",
+    "description": "Shipping address details"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "street": {
+      "type": "string",
+      "required": true
+    },
+    "city": {
+      "type": "string",
+      "required": true
+    },
+    "state": {
+      "type": "string"
+    },
+    "postalCode": {
+      "type": "string",
+      "required": true
+    },
+    "country": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string"
+    }
+  }
+}

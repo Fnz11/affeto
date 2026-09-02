@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "carts",
+  "info": {
+    "singularName": "cart",
+    "pluralName": "carts",
+    "displayName": "Cart",
+    "description": "Server-side shopping cart for guest and users"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "sessionId": {
+      "type": "string",
+      "index": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "cart.line-item"
+    },
+    "lastActiveAt": {
+      "type": "datetime"
+    }
+  }
+}

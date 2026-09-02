@@ -1,0 +1,41 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getProducts, getCategories } from '@/lib/api';
+import { CatalogExplorer } from '@/components/catalog/CatalogExplorer';
+
+const { slug } = Astro.params;
+const products = await getProducts();
+const categories = await getCategories();
+
+const currentCategory = categories.find((c) => c.slug === slug);
+const categoryName = currentCategory?.name || (slug ? slug.charAt(0).toUpperCase() + slug.slice(1) : 'Category');
+---
+
+<Layout title={`${categoryName} — Affeto`}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="space-y-2 mb-4">
+      <nav class="text-xs text-muted-foreground flex items-center space-x-2">
+        <a href="/" class="hover:text-foreground">Home</a>
+        <span>/</span>
+        <a href="/catalog" class="hover:text-foreground">Catalog</a>
+        <span>/</span>
+        <span class="text-foreground font-medium">{categoryName}</span>
+      </nav>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
+        {categoryName}
+      </h1>
+      {currentCategory?.description && (
+        <p class="text-xs sm:text-sm text-muted-foreground max-w-xl">
+          {currentCategory.description}
+        </p>
+      )}
+    </div>
+
+    <CatalogExplorer
+      client:load
+      initialProducts={products}
+      categories={categories}
+      initialCategory={slug}
+    />
+  </div>
+</Layout>
