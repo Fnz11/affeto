@@ -1,0 +1,12 @@
+node_modules
+dist
+.astro
+.tmp
+.strapi
+build
+.cache
+.git
+data
+uploads
+*.log
+.env

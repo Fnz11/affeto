@@ -1,22 +1,20 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
     container_name: affeto-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DATABASE_NAME:-affeto}
-      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-strapi_password}
+      POSTGRES_DB: affeto
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi_password
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - affeto-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-strapi} -d ${DATABASE_NAME:-affeto}"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U strapi -d affeto"]
+      interval: 3s
+      timeout: 3s
       retries: 5
 
   strapi:
@@ -34,18 +32,18 @@ services:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_NAME: ${DATABASE_NAME:-affeto}
-      DATABASE_USERNAME: ${DATABASE_USERNAME:-strapi}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-strapi_password}
+      DATABASE_NAME: affeto
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: strapi_password
       DATABASE_SSL: "false"
-      APP_KEYS: ${APP_KEYS:-keyA,keyB,keyC,keyD}
-      API_TOKEN_SALT: ${API_TOKEN_SALT:-apitokensalt1234567890}
-      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-adminjwtsecret1234567890}
-      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-transfertokensalt1234567890}
-      JWT_SECRET: ${JWT_SECRET:-jwtsecret1234567890}
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_mock}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_mock}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4321}
+      APP_KEYS: "appKeyA,appKeyB,appKeyC,appKeyD"
+      API_TOKEN_SALT: "apiTokenSaltAffetoSecret12345"
+      ADMIN_JWT_SECRET: "adminJwtSecretAffetoSecret12345"
+      TRANSFER_TOKEN_SALT: "transferTokenSaltAffetoSecret12345"
+      JWT_SECRET: "frontendJwtSecretAffetoSecret12345"
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_mock_secret_key}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_mock_webhook_secret}
+      FRONTEND_URL: http://localhost:4321
     volumes:
       - ./backend/public/uploads:/app/public/uploads
     ports:
@@ -64,7 +62,7 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 4321
-      PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL:-http://localhost:1337}
+      PUBLIC_STRAPI_URL: http://localhost:1337
       INTERNAL_STRAPI_URL: http://strapi:1337
     ports:
       - "4321:4321"
@@ -77,7 +75,6 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

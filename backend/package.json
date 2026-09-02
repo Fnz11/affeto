@@ -4,12 +4,12 @@
   "private": true,
   "description": "Strapi Headless E-Commerce Backend",
   "scripts": {
+    "dev": "strapi develop",
     "develop": "strapi develop",
     "start": "strapi start",
-    "build": "strapi build",
+    "build": "strapi build && bun -e \"const fs = require('fs'); fs.cpSync('src', 'dist/src', { recursive: true, filter: (s) => !s.endsWith('.ts') && !s.endsWith('.tsx') });\"",
     "strapi": "strapi",
-    "seed": "tsx scripts/seed.ts",
-    "dev": "strapi develop"
+    "seed": "bun run scripts/seed.ts"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "^5.0.0",
@@ -20,20 +20,15 @@
     "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.6",
+    "react-router-dom": "^6.28.0",
     "stripe": "^17.7.0",
-    "styled-components": "^6.5.3"
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.13.1",
     "@types/pg": "^8.11.11",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.3"
-  },
-  "engines": {
-    "node": ">=18.0.0 <=24.x.x",
-    "npm": ">=6.0.0"
   },
   "license": "MIT"
 }

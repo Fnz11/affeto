@@ -1,12 +1,14 @@
 {
   "name": "affeto-monorepo",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "dev": "pnpm --parallel --filter backend --filter frontend run dev",
-    "dev:backend": "pnpm --filter backend run dev",
-    "dev:frontend": "pnpm --filter frontend run dev",
-    "build": "pnpm --recursive run build",
-    "seed": "pnpm --filter backend run seed"
-  },
-  "packageManager": "pnpm@10.32.1"
+    "dev": "bun --filter '*' dev",
+    "dev:backend": "bun --filter affeto-backend dev",
+    "dev:frontend": "bun --filter affeto-frontend dev",
+    "build": "bun --filter '*' build"
+  }
 }
