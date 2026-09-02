@@ -1,7 +1,6 @@
 ---
 import { Header } from '@/components/common/Header';
 import { CartDrawer } from '@/components/cart/CartDrawer';
-import { ReactQueryProvider } from '@/lib/queryClient';
 import Footer from '@/components/common/Footer.astro';
 import '@/styles/global.css';
 
@@ -30,13 +29,11 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body class="min-h-screen flex flex-col antialiased">
-    <ReactQueryProvider client:load>
-      <Header client:load />
-      <CartDrawer client:load />
-      <main class="flex-1">
-        <slot />
-      </main>
-      <Footer />
-    </ReactQueryProvider>
+    <Header client:load />
+    <CartDrawer client:load />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
