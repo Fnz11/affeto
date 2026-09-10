@@ -48,7 +48,7 @@ export function LoginForm() {
   return (
     <div className="max-w-md mx-auto bg-card p-8 rounded-xl border border-border shadow-xs space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="font-editorial text-2xl font-bold">Welcome Back</h1>
+        <h1 className="font-editorial text-2xl font-light">Welcome Back</h1>
         <p className="text-xs text-muted-foreground">Sign in to manage orders, wishlist, and saved addresses</p>
       </div>
 
@@ -140,7 +140,7 @@ export function RegisterForm() {
   return (
     <div className="max-w-md mx-auto bg-card p-8 rounded-xl border border-border shadow-xs space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="font-editorial text-2xl font-bold">Create Account</h1>
+        <h1 className="font-editorial text-2xl font-light">Create Account</h1>
         <p className="text-xs text-muted-foreground">Join Affeto for exclusive early access and order tracking</p>
       </div>
 

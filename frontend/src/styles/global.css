@@ -55,12 +55,21 @@ body {
 
 h1, h2, h3, h4, .font-display {
   font-family: 'Lovera', 'Syne', sans-serif;
-  font-weight: 400;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-editorial {
+  font-family: 'Lovera', 'Syne', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .font-lovera {
   font-family: 'Lovera', sans-serif;
-  font-weight: 400;
+  font-weight: 300;
 }
 
 .font-camiro {

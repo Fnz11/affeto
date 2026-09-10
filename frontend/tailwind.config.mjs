@@ -49,6 +49,7 @@ export default {
         lovera: ['Lovera', 'sans-serif'],
         camiro: ['Camiro', 'sans-serif'],
         display: ['Lovera', 'Syne', 'sans-serif'],
+        editorial: ['Lovera', 'Syne', 'sans-serif'],
         sans: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
