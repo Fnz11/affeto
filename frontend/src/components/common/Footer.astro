@@ -1,58 +1,131 @@
 ---
+import { ArrowUpRight } from "lucide-react";
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-card border-t border-border mt-20">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
-      <!-- Brand statement -->
-      <div class="space-y-4 md:col-span-1">
-        <span class="font-editorial text-2xl font-bold tracking-widest text-foreground uppercase">
-          AFFETO
-        </span>
-        <p class="text-xs text-muted-foreground leading-relaxed">
-          Crafting timeless, minimalist garments and everyday goods from responsibly sourced natural fibers. Engineered for longevity and effortless living.
-        </p>
-        <p class="text-[11px] text-muted-foreground">
-          © {currentYear} Affeto Studios. All rights reserved.
-        </p>
-      </div>
-
-      <!-- Categories -->
-      <div class="space-y-3">
-        <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Catalog</h4>
-        <ul class="space-y-2 text-xs text-muted-foreground">
-          <li><a href="/catalog" class="hover:text-foreground transition-colors">Shop All</a></li>
-          <li><a href="/category/tops" class="hover:text-foreground transition-colors">Linen & Knits</a></li>
-          <li><a href="/category/bottoms" class="hover:text-foreground transition-colors">Selvedge Denim</a></li>
-          <li><a href="/category/outerwear" class="hover:text-foreground transition-colors">Trench Coats</a></li>
-          <li><a href="/category/footwear" class="hover:text-foreground transition-colors">Tuscan Leather</a></li>
+<footer class="border-t border-border bg-background">
+  <div class="grid grid-cols-12 gap-6 px-6 py-12 lg:py-16">
+    <!-- Legal & Elsewhere -->
+    <div class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col gap-10">
+      <div>
+        <div class="micro-label text-muted-foreground mb-4">Legal</div>
+        <ul class="space-y-2">
+          <li>
+            <a class="text-sm text-foreground hover:text-accent transition-colors" href="/catalog">Imprint</a>
+          </li>
+          <li>
+            <a class="text-sm text-foreground hover:text-accent transition-colors" href="/catalog">Privacy</a>
+          </li>
+          <li>
+            <a class="text-sm text-foreground hover:text-accent transition-colors" href="/catalog">Returns</a>
+          </li>
+          <li>
+            <a class="text-sm text-foreground hover:text-accent transition-colors" href="/catalog">Contact</a>
+          </li>
         </ul>
       </div>
-
-      <!-- Customer Care -->
-      <div class="space-y-3">
-        <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Customer Service</h4>
-        <ul class="space-y-2 text-xs text-muted-foreground">
-          <li><a href="/account/orders" class="hover:text-foreground transition-colors">Track Order</a></li>
-          <li><a href="/account/wishlist" class="hover:text-foreground transition-colors">Wishlist</a></li>
-          <li><a href="/account" class="hover:text-foreground transition-colors">Account Dashboard</a></li>
-          <li><span class="text-muted-foreground/70">Shipping & Returns</span></li>
-          <li><span class="text-muted-foreground/70">Size Guide</span></li>
+      <div>
+        <div class="micro-label text-muted-foreground mb-4">Elsewhere</div>
+        <ul class="space-y-2">
+          <li>
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              class="text-sm text-foreground hover:text-accent transition-colors inline-flex items-center gap-1"
+            >
+              <span>Instagram</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.are.na"
+              target="_blank"
+              rel="noreferrer"
+              class="text-sm text-foreground hover:text-accent transition-colors inline-flex items-center gap-1"
+            >
+              <span>Are.na</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </a>
+          </li>
+          <li>
+            <a
+              href="/catalog"
+              class="text-sm text-foreground hover:text-accent transition-colors inline-flex items-center gap-1"
+            >
+              <span>Newsletter</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </a>
+          </li>
         </ul>
-      </div>
-
-      <!-- Sustainability / Certifications -->
-      <div class="space-y-3">
-        <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Sustainability</h4>
-        <p class="text-xs text-muted-foreground leading-relaxed">
-          100% plastic-free compostable packaging. 1% for the Planet partner. Carbon-neutral fulfillment via certified partners.
-        </p>
-        <div class="flex items-center gap-2 pt-2 text-[11px] text-muted-foreground font-medium">
-          <span class="px-2 py-0.5 border border-border rounded">GOTS Certified</span>
-          <span class="px-2 py-0.5 border border-border rounded">OEKO-TEX</span>
-        </div>
       </div>
     </div>
+
+    <!-- Monthly Letter -->
+    <div class="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-6 md:border-l border-border md:pl-6">
+      <div class="micro-label text-muted-foreground mb-4">Letter</div>
+      <p class="font-display text-xl lg:text-2xl leading-tight tracking-tighter-1 mb-6 max-w-md">
+        A monthly letter on form, material and the discipline of restraint.
+      </p>
+      <form class="flex border border-border max-w-md" onsubmit="event.preventDefault(); alert('Subscribed to Afetto Letter.');">
+        <input
+          placeholder="your@address.com"
+          class="flex-1 min-w-0 bg-transparent px-3 py-3 text-sm placeholder:text-muted-foreground focus:outline-none mono-label"
+          aria-label="Email address"
+          type="email"
+          required
+        />
+        <button
+          type="submit"
+          class="bg-foreground text-background px-5 micro-label hover:bg-accent transition-colors whitespace-nowrap"
+        >
+          Subscribe
+        </button>
+      </form>
+      <p class="mono-label text-muted-foreground mt-3">
+        Unsubscribe any time. No commerce in the letter.
+      </p>
+    </div>
+
+    <!-- Index Links -->
+    <div class="col-span-12 lg:col-span-3 hidden lg:block">
+      <div class="micro-label text-muted-foreground mb-4">Index</div>
+      <ul class="space-y-2">
+        <li>
+          <a class="text-sm hover:text-accent transition-colors" href="/catalog">Shop the catalogue</a>
+        </li>
+        <li>
+          <a class="text-sm hover:text-accent transition-colors" href="/category/outerwear">All collections</a>
+        </li>
+        <li>
+          <a class="text-sm hover:text-accent transition-colors" href="/catalog">Journal</a>
+        </li>
+        <li>
+          <a class="text-sm hover:text-accent transition-colors" href="/account">Account dashboard</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Giant Typographic Wordmark -->
+  <div class="border-t border-border overflow-hidden">
+    <div class="px-6 pt-6 pb-2 flex items-end justify-center select-none">
+      <a class="block leading-none" aria-label="Afetto home" href="/">
+        <span class="block font-display font-normal text-foreground tracking-tight leading-[0.82] text-[clamp(80px,16vw,240px)]">
+          Afetto.
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Legal Strip -->
+  <div class="border-t border-border px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="mono-label text-muted-foreground">
+      © Afetto Studio {currentYear} / Rua de Cedofeita 184, Porto
+    </p>
+    <p class="mono-label text-muted-foreground">
+      Designed in Porto / Made in EU + JP
+    </p>
   </div>
 </footer>

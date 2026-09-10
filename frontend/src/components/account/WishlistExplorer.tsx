@@ -5,9 +5,10 @@ import { useAuthStore } from '@/stores/authStore';
 import { formatPrice, getProductMinPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Trash2, ShoppingBag, Heart } from 'lucide-react';
+import { withQueryClient } from '@/lib/queryClient';
 import type { Product } from '@/types';
 
-export function WishlistExplorer() {
+function WishlistExplorerComponent() {
   const { data: wishlistData, isLoading } = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const addToCart = useAddToCart();
@@ -114,3 +115,5 @@ export function WishlistExplorer() {
     </div>
   );
 }
+
+export const WishlistExplorer = withQueryClient(WishlistExplorerComponent);

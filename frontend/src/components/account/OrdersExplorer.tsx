@@ -5,8 +5,9 @@ import { formatPrice } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Package, ExternalLink } from 'lucide-react';
+import { withQueryClient } from '@/lib/queryClient';
 
-export function OrdersExplorer() {
+function OrdersExplorerComponent() {
   const { data: ordersData, isLoading } = useMyOrders();
   const { initAuth, jwt } = useAuthStore();
 
@@ -134,3 +135,5 @@ export function OrdersExplorer() {
     </div>
   );
 }
+
+export const OrdersExplorer = withQueryClient(OrdersExplorerComponent);

@@ -115,8 +115,8 @@ export async function seedData(strapi: any) {
       isFeatured: true,
       isNewArrival: false,
       images: [
-        'https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=1000&q=80',
         'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=1000&q=80',
       ],
       features: ['14oz Japanese Kurabo Selvedge', 'Red-line edge detail', 'Custom brass hardware', 'Slim straight fit'],
       seoTitle: 'Japanese Selvedge Denim Jeans — Affeto',
@@ -159,7 +159,7 @@ export async function seedData(strapi: any) {
       isNewArrival: true,
       images: [
         'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=1000&q=80',
-        'https://images.unsplash.com/photo-1539533018447-63fcce667883?auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=1000&q=80',
       ],
       features: ['Bonded waterproof cotton canvas', 'Seam-sealed construction', 'Storm flap and throat latch', 'Deep welt pockets'],
       seoTitle: 'Waterproof Canvas Trench Coat — Affeto',

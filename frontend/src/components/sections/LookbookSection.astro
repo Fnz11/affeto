@@ -1,0 +1,181 @@
+---
+import { ArrowUpRight } from "lucide-react";
+import type { Product } from "@/types";
+
+interface Props {
+  products?: Product[];
+}
+
+const { products = [] } = Astro.props;
+
+// Find matching products or fallbacks from catalog
+const p1 = products.find((p) => p.slug === "minimalist-linen-shirt") || products[0];
+const p2 = products.find((p) => p.slug === "merino-wool-crewneck-sweater") || products[1];
+const p3 = products.find((p) => p.slug === "waterproof-canvas-trench-coat") || products[4] || products[2];
+const p4 = products.find((p) => p.slug === "classic-leather-chelsea-boots") || products[5] || products[3];
+---
+
+<section class="border-b border-border bg-warm">
+  <div class="grid grid-cols-12 px-6 pt-14 lg:pt-24 pb-10 gap-6">
+    <div class="col-span-12 lg:col-span-7">
+      <div class="micro-label text-muted-foreground mb-6">Lookbook / Volume 01</div>
+      <h2 class="editorial-headline text-[clamp(48px,8vw,128px)] max-w-[14ch]">
+        Wear<br /><span class="text-muted-foreground">The</span> Room.
+      </h2>
+    </div>
+    <div class="col-span-12 lg:col-span-4 lg:col-start-9 flex flex-col justify-end">
+      <p class="text-sm text-foreground leading-relaxed max-w-sm">
+        Curated looks composed from ethical Portuguese loopback, Italian wool, and French linen. Engineered for longevity and effortless living.
+      </p>
+      <a
+        class="micro-label inline-flex items-center gap-2 mt-6 self-start border-b border-foreground pb-1 hover:text-accent hover:border-accent transition-colors"
+        href="/catalog"
+      >
+        <span>Explore the lookbook</span>
+        <ArrowUpRight class="h-4 w-4" />
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 gap-0 border-t border-border">
+    <!-- Look 01 -->
+    <div class="col-span-12 md:col-span-5 border-b md:border-b-0 md:border-r border-border">
+      <article class="flex flex-col h-full">
+        <a href={`/product/${p1?.slug || "minimalist-linen-shirt"}`} class="aspect-[3/4] bg-muted overflow-hidden block">
+          <img
+            alt={p1?.name || "Minimalist Linen Shirt"}
+            crossorigin="anonymous"
+            class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-[1.2s] ease-out"
+            src={p1?.images?.[0] || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80"}
+          />
+        </a>
+        <div class="flex flex-col p-4 lg:p-5 border-t border-border gap-2">
+          <div class="flex items-baseline justify-between">
+            <span class="mono-label text-accent">Look 01</span>
+            <span class="mono-label text-muted-foreground">VOL. 01</span>
+          </div>
+          <p class="text-sm font-medium leading-snug">{p1?.name || "Minimalist Linen Shirt"}</p>
+          <p class="text-xs text-muted-foreground leading-relaxed">
+            {p1?.description || "Cut from pure French linen, pre-washed for extra softness and an effortless drape."}
+          </p>
+          <a
+            href={`/product/${p1?.slug || "minimalist-linen-shirt"}`}
+            class="micro-label inline-flex items-center gap-1 mt-1 hover:text-accent transition-colors"
+          >
+            <span>View garment</span>
+            <ArrowUpRight class="h-3 w-3" />
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Look 02 & Editor Quote -->
+    <div class="col-span-12 md:col-span-4 grid grid-rows-2 border-b md:border-b-0 md:border-r border-border">
+      <div class="border-b border-border">
+        <article class="flex flex-col h-full">
+          <a href={`/product/${p2?.slug || "merino-wool-crewneck-sweater"}`} class="aspect-square bg-muted overflow-hidden block">
+            <img
+              alt={p2?.name || "Merino Wool Crewneck"}
+              crossorigin="anonymous"
+              class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-[1.2s] ease-out"
+              src={p2?.images?.[0] || "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=80"}
+            />
+          </a>
+          <div class="flex flex-col p-4 lg:p-5 border-t border-border gap-2">
+            <div class="flex items-baseline justify-between">
+              <span class="mono-label text-accent">Look 02</span>
+              <span class="mono-label text-muted-foreground">VOL. 01</span>
+            </div>
+            <p class="text-sm font-medium leading-snug">{p2?.name || "Merino Wool Crewneck Sweater"}</p>
+            <p class="text-xs text-muted-foreground leading-relaxed">
+              {p2?.description || "Spun from 100% ultra-fine Australian Merino wool. Naturally temperature regulating."}
+            </p>
+            <a
+              href={`/product/${p2?.slug || "merino-wool-crewneck-sweater"}`}
+              class="micro-label inline-flex items-center gap-1 mt-1 hover:text-accent transition-colors"
+            >
+              <span>View garment</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="p-6 lg:p-8 flex flex-col justify-between bg-card">
+        <div>
+          <div class="micro-label text-muted-foreground mb-3">Editor&apos;s Note</div>
+          <p class="font-display text-2xl tracking-tighter-1 leading-tight">
+            &ldquo;The clothes are designed to live inside rooms, not on top of them.&rdquo;
+          </p>
+        </div>
+        <div class="flex items-baseline justify-between mt-6">
+          <span class="mono-label text-muted-foreground">/ Afetto Studio</span>
+          <a
+            class="micro-label inline-flex items-center gap-2 hover:text-accent transition-colors"
+            href="/catalog"
+          >
+            <span>Volume 01</span>
+            <ArrowUpRight class="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Look 03 & Look 04 -->
+    <div class="col-span-12 md:col-span-3">
+      <div class="border-b border-border">
+        <article class="flex flex-col h-full">
+          <a href={`/product/${p3?.slug || "waterproof-canvas-trench-coat"}`} class="aspect-[3/4] bg-muted overflow-hidden block">
+            <img
+              alt={p3?.name || "Canvas Trench Coat"}
+              crossorigin="anonymous"
+              class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-[1.2s] ease-out"
+              src={p3?.images?.[0] || "https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=1000&q=80"}
+            />
+          </a>
+          <div class="flex flex-col p-4 lg:p-5 border-t border-border gap-1">
+            <div class="flex items-baseline justify-between">
+              <span class="mono-label text-accent">Look 03</span>
+              <span class="mono-label text-muted-foreground">VOL. 01</span>
+            </div>
+            <p class="text-sm font-medium">{p3?.name || "Waterproof Canvas Trench Coat"}</p>
+            <a
+              href={`/product/${p3?.slug || "waterproof-canvas-trench-coat"}`}
+              class="micro-label inline-flex items-center gap-1 mt-1 hover:text-accent transition-colors"
+            >
+              <span>View garment</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div>
+        <article class="flex flex-col h-full">
+          <a href={`/product/${p4?.slug || "classic-leather-chelsea-boots"}`} class="aspect-square bg-muted overflow-hidden block">
+            <img
+              alt={p4?.name || "Leather Chelsea Boots"}
+              crossorigin="anonymous"
+              class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-[1.2s] ease-out"
+              src={p4?.images?.[0] || "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&w=1000&q=80"}
+            />
+          </a>
+          <div class="flex flex-col p-4 lg:p-5 border-t border-border gap-1">
+            <div class="flex items-baseline justify-between">
+              <span class="mono-label text-accent">Look 04</span>
+              <span class="mono-label text-muted-foreground">VOL. 01</span>
+            </div>
+            <p class="text-sm font-medium">{p4?.name || "Classic Leather Chelsea Boots"}</p>
+            <a
+              href={`/product/${p4?.slug || "classic-leather-chelsea-boots"}`}
+              class="micro-label inline-flex items-center gap-1 mt-1 hover:text-accent transition-colors"
+            >
+              <span>View garment</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

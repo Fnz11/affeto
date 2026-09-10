@@ -4,6 +4,8 @@ import { getProductBySlug, getProducts } from '@/lib/api';
 import { ProductDetails } from '@/components/catalog/ProductDetails';
 import { ProductCard } from '@/components/catalog/ProductCard';
 
+export const prerender = false;
+
 const { slug } = Astro.params;
 const product = await getProductBySlug(slug as string);
 
@@ -19,7 +21,7 @@ const relatedProducts = allProducts.filter((p) => p.id !== product.id).slice(0, 
   title={`${product.name} — Affeto`}
   description={product.description || product.seoDescription}
 >
-  <ProductDetails client:load product={product} />
+  <ProductDetails client:visible product={product} />
 
   <!-- Related Products -->
   {relatedProducts.length > 0 && (

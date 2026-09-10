@@ -5,8 +5,9 @@ import { useCurrencyStore } from '@/stores/currencyStore';
 import { useCart, useUpdateCartItem, useRemoveCartItem, useValidateDiscount } from '@/lib/useCommerce';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { withQueryClient } from '@/lib/queryClient';
 
-export function CartDrawer() {
+function CartDrawerComponent() {
   const { isOpen, closeDrawer } = useCartStore();
   const currency = useCurrencyStore((s) => s.currency);
   const { data: cart, isLoading } = useCart();
@@ -73,34 +74,34 @@ export function CartDrawer() {
           {/* Header */}
           <div className="p-5 border-b border-border flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <ShoppingBag className="w-5 h-5 text-foreground" />
-              <h2 className="font-editorial text-xl font-bold tracking-tight">Shopping Bag</h2>
-              <span className="text-xs text-muted-foreground">({cart?.totalItems || 0} items)</span>
+              <ShoppingBag className="w-4 h-4 text-foreground" />
+              <h2 className="font-display text-lg font-bold tracking-tighter-1">Your Basket</h2>
+              <span className="mono-label text-muted-foreground">({cart?.totalItems || 0})</span>
             </div>
             <button
               onClick={closeDrawer}
-              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors hover:bg-muted"
               aria-label="Close cart drawer"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Free Shipping Meter */}
-          <div className="bg-secondary/60 px-5 py-3 border-b border-border text-xs">
+          <div className="bg-muted/60 px-5 py-3 border-b border-border text-xs">
             {freeShippingLeft === 0 ? (
-              <div className="flex items-center text-emerald-800 font-medium">
-                <CheckCircle className="w-4 h-4 mr-1.5 text-emerald-600 flex-shrink-0" />
-                <span>You unlocked <strong>Free Standard Shipping!</strong></span>
+              <div className="flex items-center text-foreground font-medium">
+                <CheckCircle className="w-4 h-4 mr-1.5 text-accent flex-shrink-0" />
+                <span className="mono-label">Free standard delivery unlocked</span>
               </div>
             ) : (
               <p className="text-muted-foreground font-medium">
-                Add <strong className="text-foreground">{formatPrice(freeShippingLeft, currency)}</strong> more to get Free Shipping
+                Add <strong className="text-foreground">{formatPrice(freeShippingLeft, currency)}</strong> more for complimentary delivery
               </p>
             )}
-            <div className="w-full bg-border h-1.5 rounded-full mt-2 overflow-hidden">
+            <div className="w-full bg-border h-1 mt-2 overflow-hidden">
               <div
-                className="bg-primary h-full transition-all duration-500 rounded-full"
+                className="bg-foreground h-full transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -110,14 +111,14 @@ export function CartDrawer() {
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
             {isLoading ? (
               <div className="flex items-center justify-center h-48">
-                <span className="text-sm text-muted-foreground animate-pulse">Loading your cart...</span>
+                <span className="mono-label text-muted-foreground animate-pulse">Loading basket…</span>
               </div>
             ) : items.length === 0 ? (
               <div className="text-center py-16 space-y-4">
-                <ShoppingBag className="w-12 h-12 text-muted-foreground mx-auto stroke-1" />
+                <ShoppingBag className="w-10 h-10 text-muted-foreground mx-auto stroke-1" />
                 <div className="space-y-1">
-                  <p className="font-editorial text-lg font-medium">Your bag is empty</p>
-                  <p className="text-xs text-muted-foreground">Explore our timeless essentials catalog</p>
+                  <p className="font-display text-lg font-bold">Your basket is empty</p>
+                  <p className="mono-label text-muted-foreground">Volume 01 / S/S 26 now available</p>
                 </div>
                 <Button
                   onClick={() => {
@@ -126,8 +127,9 @@ export function CartDrawer() {
                   }}
                   variant="outline"
                   size="sm"
+                  className="micro-label"
                 >
-                  Browse Collection
+                  Explore Collection
                 </Button>
               </div>
             ) : (
@@ -276,3 +278,5 @@ export function CartDrawer() {
     </div>
   );
 }
+
+export const CartDrawer = withQueryClient(CartDrawerComponent);

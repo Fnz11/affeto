@@ -37,7 +37,7 @@ export default {
       path: '/cart/merge',
       handler: 'cart.mergeCart',
       config: {
-        auth: false,
+        // Authenticated users only
       },
     },
     {

@@ -4,13 +4,14 @@ import { useCurrencyStore } from '@/stores/currencyStore';
 import { useAddToCart, useToggleWishlist, useWishlist } from '@/lib/useCommerce';
 import { formatPrice, getVariantPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { withQueryClient } from '@/lib/queryClient';
 import type { Product, Variant } from '@/types';
 
 interface ProductDetailsProps {
   product: Product;
 }
 
-export function ProductDetails({ product }: ProductDetailsProps) {
+function ProductDetailsComponent({ product }: ProductDetailsProps) {
   const currency = useCurrencyStore((s) => s.currency);
   const addToCart = useAddToCart();
   const toggleWishlist = useToggleWishlist();
@@ -58,7 +59,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       {/* Breadcrumb */}
-      <nav className="text-xs text-muted-foreground flex items-center space-x-2 mb-8">
+      <nav className="mono-label text-muted-foreground flex items-center space-x-2 mb-8">
         <a href="/" className="hover:text-foreground">Home</a>
         <span>/</span>
         <a href="/catalog" className="hover:text-foreground">Catalog</a>
@@ -71,7 +72,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           </>
         )}
         <span>/</span>
-        <span className="text-foreground font-medium truncate max-w-xs">{product.name}</span>
+        <span className="text-foreground truncate max-w-xs">{product.name}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
@@ -84,22 +85,38 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                 <button
                   key={idx}
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`w-18 h-24 rounded-md overflow-hidden border-2 transition-all flex-shrink-0 bg-muted ${
-                    selectedImageIndex === idx ? 'border-primary' : 'border-transparent opacity-70 hover:opacity-100'
+                  className={`w-18 h-24 overflow-hidden border transition-all flex-shrink-0 bg-muted ${
+                    selectedImageIndex === idx ? 'border-foreground' : 'border-border opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    alt={`Thumbnail ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=200&q=80") {
+                        target.src = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=200&q=80";
+                      }
+                    }}
+                  />
                 </button>
               ))}
             </div>
           )}
 
           {/* Main Photo */}
-          <div className="flex-1 aspect-[4/5] bg-muted rounded-xl overflow-hidden shadow-xs border border-border">
+          <div className="flex-1 aspect-[4/5] bg-muted overflow-hidden border border-border">
             <img
               src={images[selectedImageIndex] || images[0]}
               alt={product.name}
               className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (target.src !== "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80") {
+                  target.src = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80";
+                }
+              }}
             />
           </div>
         </div>
@@ -107,27 +124,30 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         {/* Right: Product Info & Actions (5 cols) */}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
           <div className="space-y-4">
-            {product.category && (
-              <span className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
-                {product.category.name}
-              </span>
-            )}
-            <h1 className="font-editorial text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            <div className="flex items-center justify-between">
+              {product.category && (
+                <span className="mono-label text-muted-foreground">
+                  {product.category.name}
+                </span>
+              )}
+              <span className="mono-label text-accent">VOL. 01</span>
+            </div>
+            <h1 className="font-display text-3xl sm:text-4xl font-normal tracking-tight text-foreground">
               {product.name}
             </h1>
 
             {/* Price */}
             <div className="flex items-baseline gap-3 pt-1">
-              <span className="font-editorial text-2xl sm:text-3xl font-bold text-foreground">
+              <span className="font-display text-2xl sm:text-3xl font-normal text-foreground">
                 {formatPrice(activePrice, currency)}
               </span>
-              <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                ({currency})
+              <span className="mono-label text-muted-foreground">
+                VAT included
               </span>
             </div>
 
             {/* Description snippet */}
-            <p className="text-sm text-foreground/80 leading-relaxed pt-2">
+            <p className="text-sm text-foreground leading-relaxed pt-2">
               {product.description}
             </p>
 
@@ -338,3 +358,5 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     </div>
   );
 }
+
+export const ProductDetails = withQueryClient(ProductDetailsComponent);

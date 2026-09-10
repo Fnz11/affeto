@@ -1,34 +1,53 @@
 ---
-import { Header } from '@/components/common/Header';
-import { CartDrawer } from '@/components/cart/CartDrawer';
-import Footer from '@/components/common/Footer.astro';
-import '@/styles/global.css';
+import Marquee from "@/components/common/Marquee.astro";
+import { Header } from "@/components/common/Header";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import Footer from "@/components/common/Footer.astro";
+import "@/styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  canonicalUrl?: string;
 }
 
 const {
-  title = 'Affeto — Timeless Minimalist Apparel & Goods',
-  description = 'High-performance e-commerce storefront for ethical, enduring wardrobe essentials.',
+  title = "Afetto — Avant-garde Editorial Wardrobe",
+  description = "A small, slow library of permanent pieces crafted from Portuguese loopback, Italian flannel, and Japanese washed canvas.",
+  image = "/og-image.jpg",
+  canonicalUrl,
 } = Astro.props;
+
+const canonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site || Astro.url.origin).href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <!-- Preconnect Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
   </head>
-  <body class="min-h-screen flex flex-col antialiased">
+  <body class="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-foreground selection:text-background">
+    <Marquee />
     <Header client:load />
     <CartDrawer client:load />
     <main class="flex-1">

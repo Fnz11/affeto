@@ -6,8 +6,9 @@ import { useCurrencyStore } from '@/stores/currencyStore';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { withQueryClient } from '@/lib/queryClient';
 
-export function CheckoutForm() {
+function CheckoutFormComponent() {
   const { data: cart, isLoading: isCartLoading } = useCart();
   const { user } = useAuthStore();
   const currency = useCurrencyStore((s) => s.currency);
@@ -374,3 +375,5 @@ export function CheckoutForm() {
     </div>
   );
 }
+
+export const CheckoutForm = withQueryClient(CheckoutFormComponent);

@@ -34,13 +34,24 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:4321', 'http://127.0.0.1:4321', 'http://localhost:3000', '*'],
+      origin: [
+        'http://localhost:4321',
+        'http://127.0.0.1:4321',
+        'http://localhost:3000',
+        process.env.FRONTEND_URL || 'http://localhost:4321',
+      ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'x-session-id', 'x-currency'],
       keepHeaderOnError: true,
     },
   },
-  'strapi::poweredBy',
+  {
+    resolve: './src/middlewares/rateLimit',
+    config: {
+      windowMs: 60 * 1000,
+      max: 120,
+    },
+  },
   'strapi::query',
   'strapi::body',
   'strapi::session',

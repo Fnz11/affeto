@@ -1,14 +1,18 @@
-FROM oven/bun:1-alpine AS base
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+FROM base AS deps
+COPY package.json ./
+RUN npm install
+
 FROM base AS builder
-COPY package.json bun.lock* ./
-RUN bun install --ignore-scripts
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN bun run build
+RUN npm run build
 
 FROM base AS runner
 ENV NODE_ENV=production
-COPY --from=builder /app /app
+COPY --from=builder /app ./
 EXPOSE 1337
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "start"]

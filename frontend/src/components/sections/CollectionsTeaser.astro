@@ -1,0 +1,94 @@
+---
+import { ArrowUpRight } from "lucide-react";
+import type { Category } from "@/types";
+
+interface Props {
+  categories?: Category[];
+}
+
+const { categories = [] } = Astro.props;
+
+const collections = [
+  {
+    tag: "01 / 2026",
+    sub: "Tops & Knitwear",
+    title: "Quiet Form",
+    desc: "A meditation on the volume of light French linen, merino knits, and organic loopback cotton.",
+    pieces: "French Linen",
+    href: "/category/tops",
+    img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80",
+  },
+  {
+    tag: "02 / 2026",
+    sub: "Outerwear & Coats",
+    title: "Structural Rest",
+    desc: "Bonded waterproof cotton canvas, stormproof coats, and the quiet posture of garments built for daily use.",
+    pieces: "Stormproof Canvas",
+    href: "/category/outerwear",
+    img: "https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=1000&q=80",
+  },
+  {
+    tag: "03 / Okayama",
+    sub: "Bottoms & Denim",
+    title: "Archive Selvedge",
+    desc: "14oz Japanese Kurabo red-line selvedge denim woven on vintage shuttle looms in Okayama, Japan.",
+    pieces: "Kurabo Selvedge",
+    href: "/category/bottoms",
+    img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1000&q=80",
+  },
+];
+---
+
+<section class="border-b border-border">
+  <div class="grid grid-cols-12 px-6 pt-14 pb-6 gap-6 items-end">
+    <div class="col-span-12 lg:col-span-7">
+      <div class="micro-label text-muted-foreground mb-4">02 / Collections</div>
+      <h2 class="editorial-headline text-[clamp(36px,5.5vw,72px)] max-w-[14ch]">
+        Three Volumes,<br />One Library.
+      </h2>
+    </div>
+    <div class="col-span-12 lg:col-span-5 flex lg:justify-end">
+      <a class="micro-label inline-flex items-center gap-2 group hover:text-accent transition-colors" href="/catalog">
+        <span>Browse all collections</span>
+        <ArrowUpRight class="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 border-t border-border">
+    {collections.map((col, idx) => (
+      <a
+        href={col.href}
+        class={`group block ${idx > 0 ? "border-t lg:border-t-0 lg:border-l border-border" : ""}`}
+      >
+        <div class="relative aspect-[4/5] overflow-hidden bg-muted">
+          <img
+            alt={col.title}
+            crossorigin="anonymous"
+            class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+            src={col.img}
+          />
+          <span class="absolute top-3 left-3 mono-label bg-background/90 px-2 py-1">
+            {col.tag}
+          </span>
+        </div>
+        <div class="p-5 lg:p-6 border-t border-border bg-card">
+          <div class="micro-label text-muted-foreground mb-2">{col.sub}</div>
+          <h3 class="font-display text-3xl lg:text-4xl font-normal tracking-tight leading-none mb-3">
+            {col.title}
+          </h3>
+          <p class="text-xs text-muted-foreground leading-relaxed mb-4 line-clamp-3">
+            {col.desc}
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="mono-label text-muted-foreground">{col.pieces}</span>
+            <span class="micro-label inline-flex items-center gap-1 text-foreground group-hover:text-accent transition-colors">
+              <span>Explore</span>
+              <ArrowUpRight class="h-3 w-3" />
+            </span>
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

@@ -4,15 +4,15 @@ services:
     container_name: affeto-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: affeto
-      POSTGRES_USER: strapi
-      POSTGRES_PASSWORD: strapi_password
+      POSTGRES_DB: ${DATABASE_NAME:-affeto}
+      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-strapi_password}
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - affeto-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U strapi -d affeto"]
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-strapi} -d ${DATABASE_NAME:-affeto}"]
       interval: 3s
       timeout: 3s
       retries: 5
@@ -29,21 +29,25 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 1337
-      DATABASE_CLIENT: postgres
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_NAME: affeto
-      DATABASE_USERNAME: strapi
-      DATABASE_PASSWORD: strapi_password
-      DATABASE_SSL: "false"
-      APP_KEYS: "appKeyA,appKeyB,appKeyC,appKeyD"
-      API_TOKEN_SALT: "apiTokenSaltAffetoSecret12345"
-      ADMIN_JWT_SECRET: "adminJwtSecretAffetoSecret12345"
-      TRANSFER_TOKEN_SALT: "transferTokenSaltAffetoSecret12345"
-      JWT_SECRET: "frontendJwtSecretAffetoSecret12345"
+      DATABASE_CLIENT: ${DATABASE_CLIENT:-postgres}
+      DATABASE_HOST: ${DATABASE_HOST:-postgres}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_NAME: ${DATABASE_NAME:-affeto}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-strapi}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-strapi_password}
+      DATABASE_SSL: "${DATABASE_SSL:-false}"
+      APP_KEYS: ${APP_KEYS:-appKeyA,appKeyB,appKeyC,appKeyD}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:-apiTokenSaltAffetoSecret12345}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-adminJwtSecretAffetoSecret12345}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-transferTokenSaltAffetoSecret12345}
+      JWT_SECRET: ${JWT_SECRET:-frontendJwtSecretAffetoSecret12345}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_mock_secret_key}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_mock_webhook_secret}
-      FRONTEND_URL: http://localhost:4321
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-orders@affeto.com}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4321}
+      FRONTEND_INTERNAL_URL: http://frontend:4321
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-affeto-revalidate-secret-token}
     volumes:
       - ./backend/public/uploads:/app/public/uploads
     ports:
@@ -62,8 +66,9 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 4321
-      PUBLIC_STRAPI_URL: http://localhost:1337
+      PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL:-http://localhost:1337}
       INTERNAL_STRAPI_URL: http://strapi:1337
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-affeto-revalidate-secret-token}
     ports:
       - "4321:4321"
     networks:
@@ -85,10 +90,44 @@ services:
     networks:
       - affeto-network
 
+  # PRD §8 DB backup automated cron container
+  backup:
+    image: postgres:16-alpine
+    container_name: affeto-backup
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-affeto}
+      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-strapi_password}
+      POSTGRES_HOST: postgres
+    volumes:
+      - backups:/backups
+      - ./backend/public/uploads:/media:ro
+    entrypoint: |
+      /bin/sh -c '
+      mkdir -p /backups
+      echo "Starting automated database and media backup scheduler (every 24h)..."
+      while true; do
+        DATE=$$(date +%Y%m%d_%H%M%S)
+        echo "[BACKUP] Creating dump at $$DATE..."
+        PGPASSWORD="$$POSTGRES_PASSWORD" pg_dump -h "$$POSTGRES_HOST" -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -F c -b -v -f "/backups/affeto_db_$$DATE.dump" || echo "[BACKUP] DB dump failed"
+        tar -czf "/backups/media_$$DATE.tar.gz" -C /media . 2>/dev/null || echo "[BACKUP] Media archiving skipped"
+        # Keep only last 7 days of backups
+        find /backups -type f -mtime +7 -delete
+        echo "[BACKUP] Backup completed successfully. Sleeping for 24h..."
+        sleep 86400
+      done'
+    networks:
+      - affeto-network
+
 volumes:
   pgdata:
   caddy_data:
   caddy_config:
+  backups:
 
 networks:
   affeto-network:

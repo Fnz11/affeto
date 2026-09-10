@@ -1,0 +1,184 @@
+---
+import { ArrowRight, Search } from "lucide-react";
+import type { Category, Product } from "@/types";
+
+interface Props {
+  products?: Product[];
+  categories?: Category[];
+}
+
+const { products = [], categories = [] } = Astro.props;
+
+const totalCount = products.length || 8;
+
+const indexItems = [
+  { label: "All Objects", count: String(totalCount).padStart(2, "0"), active: true, href: "/catalog" },
+  ...categories.map((cat) => {
+    const count = products.filter(
+      (p) => p.category?.slug === cat.slug || (p.category as any) === cat.slug || (p.category as any)?.id === cat.id
+    ).length;
+    return {
+      label: cat.name,
+      count: String(count).padStart(2, "0"),
+      active: false,
+      href: `/category/${cat.slug}`,
+    };
+  }),
+];
+---
+
+<section class="border-b border-border">
+  <div class="grid grid-cols-12 min-h-[88vh]">
+    <!-- Left Sidebar: Index & Quick Search -->
+    <aside class="col-span-12 lg:col-span-2 border-b lg:border-b-0 lg:border-r border-border">
+      <div class="lg:sticky lg:top-[68px] p-6 lg:p-5 lg:h-[calc(100vh-68px)] flex flex-col justify-between">
+        <div>
+          <div class="micro-label text-muted-foreground mb-6">Index</div>
+          <ul class="flex lg:flex-col gap-x-4 gap-y-1.5 overflow-x-auto lg:overflow-visible">
+            {indexItems.map((cat) => (
+              <li>
+                <a
+                  href={cat.href}
+                  class={`flex items-baseline gap-2 text-left whitespace-nowrap py-1.5 group transition-colors w-full justify-between ${
+                    cat.active ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span class="flex items-center gap-2">
+                    <span
+                      class={`inline-block h-1.5 w-1.5 transition-colors ${
+                        cat.active ? "bg-accent" : "bg-border group-hover:bg-foreground"
+                      }`}
+                    ></span>
+                    <span class="text-sm font-medium">{cat.label}</span>
+                  </span>
+                  <span class="mono-label text-muted-foreground">{cat.count}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="mt-8 lg:mt-auto">
+          <div class="micro-label text-muted-foreground mb-3">Search</div>
+          <form action="/catalog" method="GET" class="flex border border-border">
+            <input
+              name="search"
+              placeholder="Search term…"
+              class="flex-1 bg-transparent px-3 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none min-w-0 mono-label"
+              aria-label="Search term"
+            />
+            <button
+              type="submit"
+              aria-label="Submit search"
+              class="w-10 flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-colors"
+            >
+              <Search class="h-4 w-4" />
+            </button>
+          </form>
+          <p class="mono-label text-muted-foreground mt-3 hidden lg:block">
+            EST. 2026 / {categories.length || 6} categories available
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content & Photographic Collage -->
+    <div class="col-span-12 lg:col-span-10 relative">
+      <div class="grid grid-cols-12 h-full">
+        <!-- Hero Editorial Typography -->
+        <div class="col-span-12 lg:col-span-7 border-b lg:border-b-0 lg:border-r border-border p-6 lg:p-10 xl:p-12 flex flex-col justify-between min-h-[580px] lg:min-h-[640px]">
+          <div class="flex items-center justify-between micro-label text-muted-foreground">
+            <span>Volume 01 / S/S 26</span>
+            <span>Lookbook 014</span>
+          </div>
+
+          <div class="my-auto py-8">
+            <h1 class="editorial-headline text-[clamp(44px,7.5vw,112px)] text-foreground max-w-[12ch]">
+              Quiet<br />
+              Garments<br />
+              <span class="text-muted-foreground">For Loud</span><br />
+              Rooms<span class="text-accent">.</span>
+            </h1>
+          </div>
+
+          <div class="pt-6 flex flex-col gap-6">
+            <p class="text-sm text-foreground leading-relaxed max-w-md">
+              A twenty-four piece library cut from Portuguese loopback, Italian flannel, and Japanese washed canvas. No
+              seasonal logic, no shock palette — only the long, slow argument for weight, drape and silence.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href="/catalog"
+                class="micro-label inline-flex items-center gap-2 border border-foreground px-4 py-3 hover:bg-foreground hover:text-background transition-colors"
+              >
+                <span>Read Volume 01</span>
+                <ArrowRight class="h-4 w-4" />
+              </a>
+              <a
+                href="/catalog"
+                class="micro-label inline-flex items-center gap-2 bg-foreground text-background px-4 py-3 hover:bg-accent transition-colors"
+              >
+                <span>Shop The Library</span>
+                <ArrowRight class="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Panel Editorial Collage with Real Product Images -->
+        <div class="col-span-12 lg:col-span-5 grid grid-cols-5 grid-rows-2 gap-0 min-h-[480px] lg:min-h-[640px] border-t lg:border-t-0">
+          <div class="col-span-3 row-span-1 border-b border-r border-border bg-muted overflow-hidden">
+            <a href="/catalog" class="block w-full h-full">
+              <img
+                alt="Editorial look 01"
+                crossorigin="anonymous"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                src={products[0]?.images?.[0] || "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80"}
+              />
+            </a>
+          </div>
+          <div class="col-span-2 row-span-1 border-b border-border bg-muted overflow-hidden">
+            <a href="/catalog" class="block w-full h-full">
+              <img
+                alt="Editorial look 02"
+                crossorigin="anonymous"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                src={products[1]?.images?.[0] || "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=80"}
+              />
+            </a>
+          </div>
+          <div class="col-span-5 row-span-1 bg-muted overflow-hidden">
+            <a href="/catalog" class="block w-full h-full">
+              <img
+                alt="Editorial look 03"
+                crossorigin="anonymous"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                src={products[4]?.images?.[0] || "https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=1000&q=80"}
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom 4-Column Origin Ticker Bar -->
+  <div class="border-t border-border grid grid-cols-2 lg:grid-cols-4">
+    <div class="px-6 py-4 flex items-baseline justify-between gap-3 border-r border-b border-border lg:border-b-0">
+      <span class="mono-label text-muted-foreground">Origin</span>
+      <span class="text-sm font-medium text-right">Porto, Portugal</span>
+    </div>
+    <div class="px-6 py-4 flex items-baseline justify-between gap-3 border-b border-border lg:border-b-0 lg:border-r">
+      <span class="mono-label text-muted-foreground">Materials</span>
+      <span class="text-sm font-medium text-right">French Linen / Merino / Selvedge</span>
+    </div>
+    <div class="px-6 py-4 flex items-baseline justify-between gap-3 border-r border-border">
+      <span class="mono-label text-muted-foreground">Manufacture</span>
+      <span class="text-sm font-medium text-right">EU &amp; JP</span>
+    </div>
+    <div class="px-6 py-4 flex items-baseline justify-between gap-3">
+      <span class="mono-label text-muted-foreground">Returns</span>
+      <span class="text-sm font-medium text-right">30 days, free</span>
+    </div>
+  </div>
+</section>

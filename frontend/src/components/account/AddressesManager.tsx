@@ -4,8 +4,9 @@ import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { MapPin, Plus, CheckCircle2 } from 'lucide-react';
+import { withQueryClient } from '@/lib/queryClient';
 
-export function AddressesManager() {
+function AddressesManagerComponent() {
   const { data: addressData, isLoading } = useAddresses();
   const createAddress = useCreateAddress();
   const { initAuth, jwt } = useAuthStore();
@@ -194,3 +195,5 @@ export function AddressesManager() {
     </div>
   );
 }
+
+export const AddressesManager = withQueryClient(AddressesManagerComponent);

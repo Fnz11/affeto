@@ -1,0 +1,26 @@
+---
+interface Props {
+  items?: string[];
+}
+
+const defaultItems = [
+  "Free EU shipping over 250 €",
+  "S/S 26 — Volume 01 / Quiet Form / Now in stock",
+  "Made in Portugal, Italy & Japan",
+  "Archive — Volume 03 / 9 pieces remaining",
+  "Letter dispatched every first Sunday",
+];
+
+const { items = defaultItems } = Astro.props;
+---
+
+<div class="bg-foreground text-background border-b border-foreground overflow-hidden select-none">
+  <div class="flex animate-marquee whitespace-nowrap py-2 will-change-transform">
+    {items.concat(items).map((item) => (
+      <span class="mono-label flex items-center gap-3 px-6 text-background/85">
+        <span class="inline-block h-1.5 w-1.5 bg-background/60"></span>
+        {item}
+      </span>
+    ))}
+  </div>
+</div>

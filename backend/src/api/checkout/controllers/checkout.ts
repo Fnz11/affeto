@@ -1,19 +1,21 @@
 import Stripe from 'stripe';
+import crypto from 'crypto';
+import { sendOrderConfirmationEmail } from '../../../services/email';
 
 export default {
   async createCheckoutSession(ctx: any) {
     const user = ctx.state.user;
-    const sessionId = ctx.request.headers['x-session-id'] || ctx.request.body.sessionId;
+    const sessionId = ctx.request.headers['x-session-id'] || ctx.request.body?.sessionId;
     const {
       customerEmail,
       shippingAddress,
       currency = 'USD',
       discountCode,
       notes,
-    } = ctx.request.body;
+    } = ctx.request.body || {};
 
-    if (!customerEmail) {
-      return ctx.badRequest('customerEmail is required');
+    if (!customerEmail || typeof customerEmail !== 'string') {
+      return ctx.badRequest('Valid customerEmail is required');
     }
     if (!shippingAddress || !shippingAddress.street || !shippingAddress.city || !shippingAddress.postalCode) {
       return ctx.badRequest('Valid shipping address required');
@@ -91,18 +93,26 @@ export default {
     }
 
     let discountAmount = 0;
+    let validatedCode: string | undefined;
     if (discountCode) {
       const discounts: any = await strapi.entityService.findMany('api::discount-code.discount-code' as any, {
         filters: { code: discountCode.trim().toUpperCase(), isActive: true },
       });
       if (discounts && discounts.length > 0) {
         const disc = discounts[0];
-        if (disc.discountType === 'percent') {
-          discountAmount = Math.round((subtotal * disc.value) / 100);
-        } else {
-          discountAmount = disc.value;
+        if (!disc.expiresAt || new Date(disc.expiresAt) >= new Date()) {
+          if (!disc.maxUses || (disc.currentUses || 0) < disc.maxUses) {
+            if (subtotal >= (disc.minOrderAmount || 0)) {
+              if (disc.discountType === 'percent') {
+                discountAmount = Math.round((subtotal * disc.value) / 100);
+              } else {
+                discountAmount = disc.value;
+              }
+              discountAmount = Math.min(discountAmount, subtotal);
+              validatedCode = disc.code;
+            }
+          }
         }
-        discountAmount = Math.min(discountAmount, subtotal);
       }
     }
 
@@ -110,8 +120,8 @@ export default {
     const totalAmount = Math.max(0, subtotal - discountAmount + shippingAmount);
 
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const randStr = Math.random().toString(36).substring(2, 7).toUpperCase();
-    const orderNumber = `AFF-${dateStr}-${randStr}`;
+    const randHex = crypto.randomBytes(4).toString('hex').toUpperCase();
+    const orderNumber = `AFF-${dateStr}-${randHex}`;
 
     const createdOrder: any = await strapi.entityService.create('api::order.order' as any, {
       data: {
@@ -166,6 +176,7 @@ export default {
           orderId: String(createdOrder.id),
           orderNumber,
           cartId: String(cart.id),
+          discountCode: validatedCode || '',
         },
       });
 
@@ -190,14 +201,20 @@ export default {
   },
 
   async confirmMockOrder(ctx: any) {
-    const { orderNumber } = ctx.request.body;
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    const isMockStripe = !stripeKey || stripeKey.includes('mock') || stripeKey === 'sk_test_mock_secret_key';
+    if (!isMockStripe) {
+      return ctx.forbidden('Mock order confirmation is disabled when live Stripe is active');
+    }
+
+    const { orderNumber } = ctx.request.body || {};
     if (!orderNumber) {
       return ctx.badRequest('orderNumber required');
     }
 
     const orders: any = await strapi.entityService.findMany('api::order.order' as any, {
       filters: { orderNumber },
-      populate: ['items', 'user'],
+      populate: ['items', 'shippingAddress', 'user'],
     });
 
     if (!orders || orders.length === 0) {
@@ -209,8 +226,7 @@ export default {
       return { success: true, order, alreadyPaid: true };
     }
 
-    const knex = strapi.db.connection;
-    await knex.transaction(async (trx: any) => {
+    await strapi.db.transaction(async ({ trx }: any) => {
       for (const item of order.items || []) {
         if (item.variant) {
           const inv = await trx('inventories')
@@ -232,11 +248,26 @@ export default {
       });
     });
 
+    // Clear user cart or guest cart
     if (order.user) {
       const userCart: any = await strapi.db.query('api::cart.cart').findOne({ where: { user: order.user.id } });
       if (userCart) {
         await strapi.entityService.update('api::cart.cart' as any, userCart.id, { data: { items: [] } as any });
       }
+    }
+
+    // Send confirmation email simulation
+    try {
+      await sendOrderConfirmationEmail({
+        customerEmail: order.customerEmail,
+        orderNumber: order.orderNumber,
+        totalAmount: order.totalAmount,
+        currency: order.currency,
+        items: order.items || [],
+        shippingAddress: order.shippingAddress,
+      });
+    } catch (e: any) {
+      strapi.log.error(`Email simulation error: ${e.message}`);
     }
 
     return {

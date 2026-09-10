@@ -5,8 +5,9 @@ import { useMyOrders } from '@/lib/useCommerce';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { withQueryClient } from '@/lib/queryClient';
 
-export function AccountDashboard() {
+function AccountDashboardComponent() {
   const { user, jwt, logout, initAuth } = useAuthStore();
   const { data: ordersData, isLoading: isOrdersLoading } = useMyOrders();
 
@@ -172,3 +173,5 @@ export function AccountDashboard() {
     </div>
   );
 }
+
+export const AccountDashboard = withQueryClient(AccountDashboardComponent);

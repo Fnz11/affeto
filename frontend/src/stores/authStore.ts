@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { getOrCreateSessionId } from '@/lib/session';
 import type { User } from '@/types';
 
 interface AuthState {
@@ -11,18 +12,6 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => {
-  const getInitialSessionId = () => {
-    if (typeof window !== 'undefined') {
-      let s = localStorage.getItem('affeto_session_id');
-      if (!s) {
-        s = 'sess_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
-        localStorage.setItem('affeto_session_id', s);
-      }
-      return s;
-    }
-    return '';
-  };
-
   return {
     user: null,
     jwt: null,
@@ -50,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => {
       if (typeof window !== 'undefined') {
         const jwt = localStorage.getItem('affeto_jwt');
         const userStr = localStorage.getItem('affeto_user');
-        const sessionId = getInitialSessionId();
+        const sessionId = getOrCreateSessionId();
         let user: User | null = null;
         if (userStr) {
           try {

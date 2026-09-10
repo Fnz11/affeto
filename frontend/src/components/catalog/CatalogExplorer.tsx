@@ -64,8 +64,10 @@ export function CatalogExplorer({
         categories={categories}
         activeCategory={selectedCategory}
         sortBy={sortBy}
+        searchQuery={searchQuery}
         onSelectCategory={setSelectedCategory}
         onSelectSort={setSortBy}
+        onSearchChange={setSearchQuery}
       />
 
       {filteredProducts.length === 0 ? (

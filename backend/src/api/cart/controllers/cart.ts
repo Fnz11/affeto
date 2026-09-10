@@ -1,3 +1,5 @@
+import type { Core } from '@strapi/strapi';
+
 export default {
   async getCart(ctx: any) {
     const user = ctx.state.user;
@@ -58,17 +60,18 @@ export default {
   async addItem(ctx: any) {
     const user = ctx.state.user;
     const sessionId = ctx.request.headers['x-session-id'] || ctx.request.body.sessionId;
-    const { variantId, quantity = 1, currency = 'USD' } = ctx.request.body;
+    const { variantId, quantity = 1, currency = 'USD' } = ctx.request.body || {};
 
-    if (!variantId) {
-      return ctx.badRequest('variantId is required');
+    if (!variantId || typeof variantId !== 'number' && isNaN(Number(variantId))) {
+      return ctx.badRequest('Valid variantId is required');
     }
+    const numQty = Math.max(1, parseInt(quantity, 10) || 1);
     if (!user && !sessionId) {
       return ctx.badRequest('Session ID or authentication required');
     }
 
     const variant: any = await strapi.db.query('api::variant.variant').findOne({
-      where: { id: variantId },
+      where: { id: Number(variantId) },
       populate: ['product', 'inventory', 'prices'],
     });
 
@@ -77,7 +80,7 @@ export default {
     }
 
     const stockAvailable = variant.inventory?.quantity ?? 0;
-    if (stockAvailable < quantity) {
+    if (stockAvailable < numQty) {
       return ctx.badRequest(`Insufficient stock. Only ${stockAvailable} available.`);
     }
 
@@ -114,9 +117,9 @@ export default {
     const imageUrl = variant.image || (variant.product?.images?.[0]?.url || variant.product?.images?.[0] || '');
 
     if (existingIndex > -1) {
-      const newQty = existingItems[existingIndex].quantity + quantity;
+      const newQty = existingItems[existingIndex].quantity + numQty;
       if (newQty > stockAvailable) {
-        return ctx.badRequest(`Cannot add ${quantity} more. Stock limit of ${stockAvailable} reached.`);
+        return ctx.badRequest(`Cannot add ${numQty} more. Stock limit of ${stockAvailable} reached.`);
       }
       updatedItems[existingIndex] = {
         ...existingItems[existingIndex],
@@ -127,7 +130,7 @@ export default {
     } else {
       updatedItems.push({
         variant: variant.id,
-        quantity,
+        quantity: numQty,
         unitPrice,
         currency,
         productName: variant.product?.name || 'Product',
@@ -154,17 +157,22 @@ export default {
       } as any,
     });
 
-    return this.getCart(ctx);
+    return (this as any).getCart(ctx);
   },
 
   async updateItem(ctx: any) {
     const user = ctx.state.user;
     const sessionId = ctx.request.headers['x-session-id'] || ctx.request.body.sessionId;
     const { itemId } = ctx.params;
-    const { quantity } = ctx.request.body;
+    const { quantity } = ctx.request.body || {};
 
     if (!user && !sessionId) {
       return ctx.badRequest('Session ID or authentication required');
+    }
+
+    const numQty = parseInt(quantity, 10);
+    if (isNaN(numQty)) {
+      return ctx.badRequest('Valid quantity number required');
     }
 
     const where: any = user ? { user: user.id } : { sessionId };
@@ -192,15 +200,15 @@ export default {
       return ctx.notFound('Item not found in cart');
     }
 
-    if (quantity <= 0) {
+    if (numQty <= 0) {
       items.splice(itemIndex, 1);
     } else {
       const targetItem = items[itemIndex];
       const stock = targetItem.variant?.inventory?.quantity ?? 999;
-      if (quantity > stock) {
+      if (numQty > stock) {
         return ctx.badRequest(`Requested quantity exceeds available stock (${stock}).`);
       }
-      items[itemIndex].quantity = quantity;
+      items[itemIndex].quantity = numQty;
     }
 
     await strapi.entityService.update('api::cart.cart' as any, cart.id, {
@@ -219,7 +227,7 @@ export default {
       } as any,
     });
 
-    return this.getCart(ctx);
+    return (this as any).getCart(ctx);
   },
 
   async removeItem(ctx: any) {
@@ -259,7 +267,7 @@ export default {
       } as any,
     });
 
-    return this.getCart(ctx);
+    return (this as any).getCart(ctx);
   },
 
   async mergeCart(ctx: any) {
@@ -268,7 +276,7 @@ export default {
       return ctx.unauthorized('Authentication required to merge cart');
     }
 
-    const { guestSessionId } = ctx.request.body;
+    const { guestSessionId } = ctx.request.body || {};
     if (!guestSessionId) {
       return ctx.badRequest('guestSessionId is required');
     }
@@ -283,7 +291,7 @@ export default {
     });
 
     if (!guestCart || !guestCart.items || guestCart.items.length === 0) {
-      return this.getCart(ctx);
+      return (this as any).getCart(ctx);
     }
 
     let userCart: any = await strapi.db.query('api::cart.cart').findOne({
@@ -303,7 +311,7 @@ export default {
           lastActiveAt: new Date(),
         } as any,
       });
-      return this.getCart(ctx);
+      return (this as any).getCart(ctx);
     }
 
     const combinedItems = [...(userCart.items || [])];
@@ -336,7 +344,7 @@ export default {
 
     await strapi.entityService.delete('api::cart.cart' as any, guestCart.id);
 
-    return this.getCart(ctx);
+    return (this as any).getCart(ctx);
   },
 
   async clearCart(ctx: any) {

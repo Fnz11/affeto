@@ -1,0 +1,75 @@
+---
+import { ArrowUpRight } from "lucide-react";
+---
+
+<section class="border-b border-border bg-foreground text-background">
+  <div class="grid grid-cols-12 gap-0">
+    <!-- Left Copy -->
+    <div class="col-span-12 lg:col-span-5 p-6 lg:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-background/15 min-h-[480px]">
+      <div>
+        <div class="micro-label text-background/60 mb-8">Reference / 03</div>
+        <h2 class="editorial-headline text-[clamp(40px,6vw,96px)] text-background max-w-[14ch]">
+          On<br />
+          <span class="text-background/55">Concrete,</span><br />
+          Cloth<span class="text-accent">,</span><br />
+          <span class="text-background/55">And</span> Step.
+        </h2>
+      </div>
+      <div class="mt-10 max-w-sm">
+        <p class="text-sm text-background/80 leading-relaxed mb-6">
+          The references that hold the studio together — brutalist negative space, the close grain of raw wool, and the
+          small geometry of a single body crossing a wide street.
+        </p>
+        <a
+          class="micro-label inline-flex items-center gap-2 border border-background/30 px-4 py-3 hover:bg-background hover:text-foreground transition-colors"
+          href="/catalog"
+        >
+          <span>Enter the Journal</span>
+          <ArrowUpRight class="h-4 w-4" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Right 3-Panel Collage -->
+    <div class="col-span-12 lg:col-span-7 flex flex-col">
+      <div class="relative aspect-[16/9] lg:aspect-[16/10] overflow-hidden border-b border-background/15">
+        <img
+          alt="Brutalist architecture reference"
+          crossorigin="anonymous"
+          class="w-full h-full object-cover"
+          src="https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100013684/collage_architecture_125374e8.png"
+          style="filter: grayscale(0.3) contrast(1.05);"
+        />
+        <span class="absolute top-3 left-3 mono-label text-background/85 bg-foreground/50 backdrop-blur-sm px-2 py-1">
+          REF. 03A / BRUTALISM
+        </span>
+      </div>
+      <div class="grid grid-cols-2 flex-1">
+        <div class="relative border-r border-background/15 overflow-hidden">
+          <img
+            alt="Fabric macro reference"
+            crossorigin="anonymous"
+            class="w-full h-full object-cover aspect-square"
+            src="https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100013684/collage_fabric_030ff469.png"
+            style="filter: grayscale(0.15) contrast(1.05);"
+          />
+          <span class="absolute top-3 left-3 mono-label text-background/85 bg-foreground/50 backdrop-blur-sm px-2 py-1">
+            REF. 03B / WOOL
+          </span>
+        </div>
+        <div class="relative overflow-hidden">
+          <img
+            alt="Urban street reference"
+            crossorigin="anonymous"
+            class="w-full h-full object-cover aspect-square"
+            src="https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100013684/collage_urban_c7ad2f77.png"
+            style="filter: grayscale(0.4) contrast(1.05);"
+          />
+          <span class="absolute top-3 left-3 mono-label text-background/85 bg-foreground/50 backdrop-blur-sm px-2 py-1">
+            REF. 03C / STREET
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

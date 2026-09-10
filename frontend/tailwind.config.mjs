@@ -10,6 +10,7 @@ export default {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        warm: '#FAF8F5',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -45,8 +46,24 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        serif: ['Playfair Display', 'Georgia', 'serif'],
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        lovera: ['Lovera', 'sans-serif'],
+        camiro: ['Camiro', 'sans-serif'],
+        display: ['Lovera', 'Syne', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      letterSpacing: {
+        'tighter-1': '-0.035em',
+        'tighter-2': '-0.06em',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 35s linear infinite',
       },
     },
   },

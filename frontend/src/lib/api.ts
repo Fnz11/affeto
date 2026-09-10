@@ -1,9 +1,9 @@
-import { useAuthStore } from '@/stores/authStore';
-import { useCurrencyStore } from '@/stores/currencyStore';
-import type { Currency, Cart, Product, Category, Order, Address, DiscountCodeResult } from '@/types';
+import { getOrCreateSessionId } from './session';
+import type { Product, Category } from '@/types';
 
+// In browser, call relative /api (Astro BFF route) or PUBLIC_STRAPI_URL if configured; on server call INTERNAL_STRAPI_URL directly
 export const STRAPI_URL = typeof window !== 'undefined'
-  ? (import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337')
+  ? ''
   : (process.env.INTERNAL_STRAPI_URL || process.env.PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337');
 
 export async function fetcher<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -16,12 +16,10 @@ export async function fetcher<T = any>(endpoint: string, options: RequestInit = 
       headers.set('Authorization', `Bearer ${jwt}`);
     }
 
-    let sessionId = localStorage.getItem('affeto_session_id');
-    if (!sessionId) {
-      sessionId = 'sess_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
-      localStorage.setItem('affeto_session_id', sessionId);
+    const sessionId = getOrCreateSessionId();
+    if (sessionId) {
+      headers.set('x-session-id', sessionId);
     }
-    headers.set('x-session-id', sessionId);
 
     const currency = localStorage.getItem('affeto_currency') || 'USD';
     headers.set('x-currency', currency);
@@ -41,7 +39,7 @@ export async function fetcher<T = any>(endpoint: string, options: RequestInit = 
       const errJson = await res.json();
       errorMsg = errJson?.error?.message || errJson?.message || errorMsg;
     } catch (e) {
-      errorMsg = await res.text() || errorMsg;
+      errorMsg = (await res.text()) || errorMsg;
     }
     throw new Error(errorMsg);
   }
@@ -59,7 +57,8 @@ export async function getProducts(params: Record<string, string> = {}): Promise<
       'populate[3]': 'variants.inventory',
       ...params,
     });
-    const res = await fetch(`${STRAPI_URL}/api/products?${query.toString()}`, {
+    const serverBase = process.env.INTERNAL_STRAPI_URL || process.env.PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337';
+    const res = await fetch(`${serverBase}/api/products?${query.toString()}`, {
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     });
@@ -81,7 +80,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       'populate[2]': 'variants.prices',
       'populate[3]': 'variants.inventory',
     });
-    const res = await fetch(`${STRAPI_URL}/api/products?${query.toString()}`, {
+    const serverBase = process.env.INTERNAL_STRAPI_URL || process.env.PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337';
+    const res = await fetch(`${serverBase}/api/products?${query.toString()}`, {
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     });
@@ -100,7 +100,8 @@ export async function getCategories(): Promise<Category[]> {
       'populate[0]': 'parent',
       'populate[1]': 'children',
     });
-    const res = await fetch(`${STRAPI_URL}/api/categories?${query.toString()}`, {
+    const serverBase = process.env.INTERNAL_STRAPI_URL || process.env.PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337';
+    const res = await fetch(`${serverBase}/api/categories?${query.toString()}`, {
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     });
