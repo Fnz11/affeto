@@ -7,10 +7,6 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/Fnz11/affeto">
-    <img src="frontend/public/favicon.svg" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">affeto</h3>
 
   <p align="center">
